@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mi Portfolio de Apps</title>
+  <style>
+    :root{
+      --bg:#0b0f19; --card:#141a2a; --card-2:#0f1523; --text:#e6e9f0; --muted:#98a2b3; --accent:#7c3aed; --accent-2:#22d3ee; --ok:#22c55e;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(1200px 600px at 10% -10%, #1a2140 0%, transparent 60%),radial-gradient(1000px 500px at 120% 0%, #0f2740 0%, transparent 60%), var(--bg);color:var(--text);font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;}
+    a{color:inherit}
+    .container{max-width:980px;margin:0 auto;padding:24px}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:24px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));font-weight:800}
+    nav a{opacity:.9;margin-left:16px;text-decoration:none}
+    nav a:hover{opacity:1}
+    .hero{display:grid;gap:12px;padding:28px;border-radius:20px;background:linear-gradient(180deg,rgba(124,58,237,.12),transparent),linear-gradient(180deg, rgba(34,211,238,.08), transparent), var(--card)}
+    .hero h1{margin:0;font-size: clamp(28px, 4vw, 40px)}
+    .hero p{margin:0;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:22px}
+    .card{grid-column: span 12;background:linear-gradient(180deg, rgba(255,255,255,.03), transparent), var(--card);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .card h3{margin:0 0 6px}
+    .stack{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 14px}
+    .tag{padding:4px 8px;border-radius:999px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.35);font-size:12px}
+    .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;text-decoration:none;background:#1d2437;border:1px solid rgba(255,255,255,.08)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));border:none;color:#0b0f19;font-weight:700}
+    .thumb{width:100%;aspect-ratio:16/9;border-radius:12px;object-fit:cover;background:linear-gradient(135deg,#182036,#0f1523)}
+    .two-col{grid-column:span 12}
+    @media(min-width:800px){.two-col{grid-column:span 6}}
+    footer{opacity:.7;margin:32px 0 10px;text-align:center;font-size:14px}
+    .note{font-size:13px;color:var(--muted)}
+    .kpis{display:flex;gap:12px;flex-wrap:wrap}
+    .kpi{background:var(--card-2);border:1px solid rgba(255,255,255,.06);padding:12px 14px;border-radius:14px}
+    .kpi b{display:block;font-size:18px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">⚙️</div>
+        <div>
+          <div style="font-weight:800">Tu Nombre</div>
+          <div class="note">Desarrollador/a · Java · C++</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#proyectos">Proyectos</a>
+        <a href="#sobre-mi">Sobre mí</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1>Portfolio de Apps</h1>
+      <p>Aquí recopilo las aplicaciones que voy construyendo. Puedes descargarlas o, cuando sea posible, probarlas directamente en el navegador.</p>
+      <div class="kpis">
+        <div class="kpi"><b>2</b> Proyectos publicados</div>
+        <div class="kpi"><b>★</b> Abiertos a feedback</div>
+      </div>
+    </section>
+
+    <section id="proyectos" class="grid">
+      <!-- Proyecto Java -->
+      <article class="card two-col">
+        <img class="thumb" alt="Captura de la app Java" />
+        <h3>Ajedrez (Java)</h3>
+        <div class="stack">
+          <span class="tag">Java</span>
+          <span class="tag">Swing/JavaFX</span>
+          <span class="tag">JAR</span>
+        </div>
+        <p>Juego de ajedrez en Java. Muestra el tablero, valida movimientos y permite partidas locales. Ideal para practicar POO, lógica de juego y manejo de interfaz (Swing/JavaFX según tu implementación).</p>
+        <div class="row">
+          <a class="btn primary" href="apps/ajedrez.jar" target="_blank">Descargar</a>
+          <a class="btn" href="#" target="_blank" title="Sube tu repo y cambia este enlace">Código fuente</a>
+          <a class="btn" href="#" target="_blank">Guía de uso</a>
+          <!-- Ejecución en navegador con CheerpJ (opcional cuando lo tengas listo) -->
+          <a class="btn" href="demo-java.html" target="_blank">Probar en el navegador</a>
+        </div>
+        <p class="note">¿App de escritorio? Publica un .jar o instalador. Para ejecutar en navegador, puedes usar CheerpJ y enlazar una demo.</p>
+      </article>
+
+      <!-- Proyecto C++ -->
+      <article class="card two-col">
+        <img class="thumb" alt="Captura de la app C++" />
+        <h3>Mi App en C++</h3>
+        <div class="stack">
+          <span class="tag">C++</span>
+          <span class="tag">CLI/SDL/Qt</span>
+          <span class="tag">WASM (opcional)</span>
+        </div>
+        <p>Descripción breve del proyecto, retos técnicos y qué tecnologías usaste.</p>
+        <div class="row">
+          <a class="btn primary" href="#" target="_blank">Descargar</a>
+          <a class="btn" href="#" target="_blank">Código fuente</a>
+          <!-- Demo WebAssembly compilada con Emscripten -->
+          <a class="btn" href="demo-cpp/index.html" target="_blank">Probar en el navegador</a>
+        </div>
+        <p class="note">Si compilas a WebAssembly con Emscripten podrás ofrecer una demo web sin instalaciones.</p>
+      </article>
+
+      <!-- Sección Sobre mí -->
+      <article id="sobre-mi" class="card" style="grid-column:span 12">
+        <h3>Sobre mí</h3>
+        <p>Cuenta en 3-4 líneas quién eres, qué te motiva y qué tipo de apps te gusta crear.</p>
+      </article>
+
+      <!-- Sección Contacto -->
+      <article id="contacto" class="card" style="grid-column:span 12">
+        <h3>Contacto</h3>
+        <p>¿Te interesa colaborar o dar feedback? Escríbeme:</p>
+        <div class="row">
+          <a class="btn" href="mailto:tucorreo@example.com">📧 tucorreo@example.com</a>
+          <a class="btn" href="#" target="_blank">GitHub</a>
+          <a class="btn" href="#" target="_blank">LinkedIn</a>
+        </div>
+      </article>
+    </section>
+
+    <footer>© <span id="year"></span> Tu Nombre — Hecho con ❤</footer>
+  </div>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+
+
+<!-- ========================================= -->
+<!-- Archivo: demo-java.html (copia este archivo al mismo nivel que index.html) -->
+<!-- Requiere subir tu JAR a /apps/miapp.jar o cambia la ruta en cheerpjRunJar -->
+<!-- ========================================= -->
+<!--
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo Java (CheerpJ)</title>
+  <style>html,body{height:100%;margin:0}body{display:grid;place-items:center;background:#0b0f19;color:#e6e9f0;font-family:Inter,system-ui} .card{width:min(960px,100%);height:min(640px,80vh);background:#141a2a;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden} header{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center} iframe,.cheerpj-canvas{width:100%;height:calc(100% - 48px);display:block;background:#000}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <strong>Demo Java — CheerpJ</strong>
+      <a href="../index.html" style="color:#a5b4fc;text-decoration:none">⟵ Volver</a>
+    </header>
+    <div id="mount"></div>
+  </div>
+
+  <script src="https://cjrtnc.leaningtech.com/latest/loader.js"></script>
+  <script>
+    (async () => {
+      await cheerpjInit();
+      // Cambia la ruta al JAR según dónde lo subas
+      await cheerpjRunJar("/apps/ajedrez.jar");
+    })();
+  </script>
+</body>
+</html>
+-->
+
+<!-- ========================================= -->
+<!-- Carpeta: demo-cpp/  |  Archivo: index.html -->
+<!-- Supone que has compilado con emcc -o app.html ... y copiado app.html, app.data, app.wasm y app.js aquí -->
+<!-- ========================================= -->
+<!--
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo C++ (Emscripten)</title>
+  <style>html,body{height:100%;margin:0}body{background:#0b0f19;display:grid;place-items:center} .frame{width:min(960px,100%);height:min(640px,80vh);border:1px solid #222;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden}</style>
+</head>
+<body>
+  <iframe class="frame" src="app.html" title="Demo C++"></iframe>
+</body>
+</html>
+-->
+
+</html>
