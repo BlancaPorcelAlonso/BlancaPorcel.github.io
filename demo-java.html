@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Demo Java (CheerpJ)</title>
+<style>html,body{height:100%;margin:0}body{display:grid;place-items:center;background:#0b0f19;color:#e6e9f0;font-family:Inter,system-ui} .card{width:min(960px,100%);height:min(640px,80vh);background:#141a2a;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden} header{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center} iframe,.cheerpj-canvas{width:100%;height:calc(100% - 48px);display:block;background:#000}
+</style>
+</head>
+<body>
+<div class="card">
+<header>
+<strong>Demo Java — CheerpJ</strong>
+<a href="../index.html" style="color:#a5b4fc;text-decoration:none">⟵ Volver</a>
+</header>
+<div id="mount"></div>
+</div>
+
+
+<script src="https://cjrtnc.leaningtech.com/latest/loader.js"></script>
+<script>
+(async () => {
+await cheerpjInit();
+// Cambia la ruta al JAR según dónde lo subas
+await cheerpjRunJar("/apps/ajedrez.jar");
+})();
+</script>
+</body>
+</html>
