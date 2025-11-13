@@ -31,7 +31,7 @@
         await cheerpjCreateDisplay(document.getElementById("cj-display"));
 
         // Comprueba acceso al JAR desde el MISMO origen
-        const head = await fetch("/apps/Ajedrez.jar", { method: "HEAD" });
+        const head = await fetch("/BlancaPorcel.github.io/apps/Ajedrez.jar", { method: "HEAD" });
         if (!head.ok) throw new Error("No se puede acceder a /apps/Ajedrez.jar (HTTP " + head.status + ")");
 
         log("Ejecutando JAR…");
