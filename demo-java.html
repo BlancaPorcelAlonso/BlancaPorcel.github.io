@@ -1,26 +1,21 @@
-<!-- … -->
-<a href="apps/Ajedrez.jar" download>Descargar JAR</a>  <!-- ← ruta relativa -->
-
-<script src="https://cjrtnc.leaningtech.com/latest/loader.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", () => {
   const statusEl = document.getElementById("status");
   const runBtn = document.getElementById("run");
   const log = (m) => { statusEl.textContent = m; console.log("[DEMO]", m); };
 
-  // Ruta relativa dentro del mismo repo / página
-  const JAR_PATH = "apps/Ajedrez.jar";  // ← clave: NO usar https://…
+  const JAR_PATH = "apps/Ajedrez.jar";
 
   async function run() {
     try {
       log("Inicializando CheerpJ…");
       await cheerpjInit();
 
-      // (Opcional) comprobar que existe
       const head = await fetch(JAR_PATH, { method: "HEAD" });
       if (!head.ok) throw new Error("No se puede acceder al JAR (HTTP " + head.status + ")");
 
       log("Ejecutando el JAR…");
-      await cheerpjRunJar(JAR_PATH);    // ← pasar la ruta relativa
+      await cheerpjRunJar(JAR_PATH);
 
       log("Lanzado. Si es Swing, debería abrirse la ventana.");
     } catch (e) {
@@ -30,5 +25,6 @@
   }
 
   runBtn.addEventListener("click", run);
-  run();
+  run(); // ejecuta automáticamente
+});
 </script>
