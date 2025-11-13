@@ -1,29 +1,71 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Demo Java (CheerpJ)</title>
-<style>html,body{height:100%;margin:0}body{display:grid;place-items:center;background:#0b0f19;color:#e6e9f0;font-family:Inter,system-ui} .card{width:min(960px,100%);height:min(640px,80vh);background:#141a2a;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden} header{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center} iframe,.cheerpj-canvas{width:100%;height:calc(100% - 48px);display:block;background:#000}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo Java (CheerpJ)</title>
+  <style>
+    :root{--bg:#0b0f19;--card:#141a2a;--text:#e6e9f0;--muted:#9aa3b2}
+    html,body{height:100%;margin:0}
+    body{display:grid;place-items:center;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto}
+    .card{width:min(960px,100%);height:min(640px,82vh);background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden;display:flex;flex-direction:column}
+    header{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center}
+    #stage{flex:1;background:#000}
+    .row{display:flex;gap:12px;align-items:center}
+    a{color:#a5b4fc;text-decoration:none}
+    .msg{padding:10px 14px;border-top:1px solid rgba(255,255,255,.08);font-size:14px;color:var(--muted)}
+    code{background:#0f1523;padding:2px 6px;border-radius:6px}
+    button{padding:8px 12px;border-radius:10px;background:#1e2638;color:#fff;border:1px solid rgba(255,255,255,.1);cursor:pointer}
+  </style>
 </head>
 <body>
-<div class="card">
-<header>
-<strong>Demo Java — CheerpJ</strong>
-<a href="../index.html" style="color:#a5b4fc;text-decoration:none">⟵ Volver</a>
-</header>
-<div id="mount"></div>
-</div>
+  <div class="card">
+    <header>
+      <strong>Demo Java — CheerpJ</strong>
+      <div class="row">
+        <a href="index.html">⟵ Volver</a>
+        <a href="apps/Ajedrez.jar" download>Descargar JAR</a>
+        <button id="retry">Reintentar</button>
+      </div>
+    </header>
+    <div id="stage"></div>
+    <div class="msg" id="status">Inicializando…</div>
+  </div>
 
+  <script src="https://cjrtnc.leaningtech.com/latest/loader.js"></script>
+  <script>
+    const statusEl = document.getElementById("status");
+    function log(msg){ statusEl.textContent = msg; console.log("[DEMO]", msg); }
 
-<script src="https://cjrtnc.leaningtech.com/latest/loader.js"></script>
-<script>
-(async () => {
-await cheerpjInit();
-// Cambia la ruta al JAR según dónde lo subas
-await cheerpjRunJar("apps/Ajedrez.jar");
-})();
-</script>
+    async function run() {
+      try {
+        log("Cargando runtime CheerpJ…");
+        await cheerpjInit(); // inicia el runtime
+
+        // ⚠️ Usa ruta relativa SIN barra inicial
+        const jarPath = "apps/Ajedrez.jar";
+
+        // Prueba de acceso al JAR (simple HEAD vía fetch)
+        log("Comprobando acceso a " + jarPath + "…");
+        const resp = await fetch(jarPath, { method: "HEAD" });
+        if (!resp.ok) throw new Error("No se puede acceder a " + jarPath + " (HTTP " + resp.status + ")");
+
+        log("Ejecutando JAR…");
+        await cheerpjRunJar(jarPath); // usa Main-Class del MANIFEST
+
+        log("Si tu app es Swing, debería abrirse una ventana en unos segundos.");
+      } catch (e) {
+        console.error(e);
+        log("Error: " + (e && e.message ? e.message : e));
+        const hint = document.createElement("div");
+        hint.className = "msg";
+        hint.innerHTML = "Pistas: 1) ¿ruta exacta <code>apps/Ajedrez.jar</code>? 2) ¿tiene <code>Main-Class</code> en MANIFEST? 3) ¿es Swing (no JavaFX)?";
+        document.body.appendChild(hint);
+      }
+    }
+
+    document.getElementById("retry").addEventListener("click", run);
+    run();
+  </script>
 </body>
 </html>
