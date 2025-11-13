@@ -1,58 +1,30 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Demo Java — CheerpJ (global)</title>
-  <style>
-    :root{--bg:#0b0f19;--card:#141a2a;--text:#e6e9f0;--muted:#9aa3b2}
-    html,body{height:100%;margin:0}
-    body{display:grid;place-items:center;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
-    .card{width:min(960px,100%);height:min(640px,84vh);background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden}
-    header{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;gap:16px;align-items:center;justify-content:flex-end}
-    #status{padding:8px 12px;border-top:1px solid rgba(255,255,255,.08);font-size:14px;color:var(--muted);white-space:pre-wrap}
-    a{color:#a5b4fc;text-decoration:none}
-    button{padding:8px 12px;border-radius:10px;background:#1e2638;color:#fff;border:1px solid rgba(255,255,255,.1);cursor:pointer}
-  </style>
-</head>
-<body>
-  <div class="card">
-    <header>
-      <a href="index.html">⟵ Volver</a>
-      <a href="apps/Ajedrez.jar" download>Descargar JAR</a>
-      <button id="retry">Reintentar</button>
-    </header>
-    <div id="status">Preparando entorno…</div>
-  </div>
+<script src="https://cjrtnc.leaningtech.com/latest/loader.js"></script>
+<script>
+  const statusEl = document.getElementById("status");
+  const log = m => { statusEl.textContent = m; console.log("[DEMO]", m); };
 
-  <!-- Runtime global de CheerpJ -->
-  <script src="https://cjrtnc.leaningtech.com/latest/loader.js"></script>
-  <script>
-    const statusEl = document.getElementById("status");
-    const JAR = "apps/Ajedrez.jar";
-    const log = m => { statusEl.textContent = m; console.log("[DEMO]", m); };
+  // URL ABSOLUTA al JAR (resuelve contra la página actual)
+  const JAR_URL = new URL("apps/Ajedrez.jar", window.location.href).href;
 
-    async function run() {
-      try {
-        log("Inicializando CheerpJ…");
-        await cheerpjInit(); // <- API global
+  async function run() {
+    try {
+      log("Inicializando CheerpJ…");
+      await cheerpjInit();
 
-        log("Comprobando acceso al JAR…");
-        const head = await fetch(JAR, { method: "HEAD" });
-        if (!head.ok) throw new Error("No se puede acceder a " + JAR + " (HTTP " + head.status + ")");
+      log("Comprobando acceso al JAR: " + JAR_URL);
+      const head = await fetch(JAR_URL, { method: "HEAD" });
+      if (!head.ok) throw new Error("No se puede acceder a " + JAR_URL + " (HTTP " + head.status + ")");
 
-        log("Ejecutando el JAR (usando Main-Class del MANIFEST)...");
-        await cheerpjRunJar(JAR); // <- API global (no usa AddClasspath)
+      log("Ejecutando el JAR…");
+      await cheerpjRunJar(JAR_URL);   // ← usar URL absoluta evita que lo pida como /apps/...
 
-        log("Lanzado. Si es Swing, debería abrirse la ventana.");
-      } catch (e) {
-        console.error(e);
-        log("❌ ERROR: " + (e.message || e));
-      }
+      log("Lanzado. Si es Swing, debería abrirse la ventana.");
+    } catch (e) {
+      console.error(e);
+      log("❌ ERROR: " + (e.message || e));
     }
+  }
 
-    window.addEventListener("load", run);
-    document.getElementById("retry").addEventListener("click", run);
-  </script>
-</body>
-</html>
+  window.addEventListener("load", run);
+  document.getElementById("retry").addEventListener("click", run);
+</script>
