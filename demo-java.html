@@ -35,7 +35,7 @@
         if (!head.ok) throw new Error("No se puede acceder a /apps/Ajedrez.jar (HTTP " + head.status + ")");
 
         log("Ejecutando JAR…");
-        const code = await cheerpjRunJar("app/BlancaPorcel.github.io/apps/Ajedrez.jar");
+        const code = await cheerpjRunJar("app/apps/Ajedrez.jar");
         log("Finalizado con código " + code);
       } catch (e) {
         console.error(e);
