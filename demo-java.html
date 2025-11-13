@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Demo Java — CheerpJ</title>
   <style>
-    body{margin:0;font-family:system-ui,Arial;background:#0b0f19;color:#e6e9f0;display:grid;place-items:center;height:100vh}
+    body{margin:0;font-family:system-ui,Arial;background:#0b0f19;color:#e6e9f0;display:grid;place-items:center;min-height:100vh}
     .wrap{width:min(960px,100%);background:#141a2a;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px}
     header{display:flex;gap:16px;justify-content:flex-end;margin-bottom:8px}
     a{color:#a5b4fc;text-decoration:none}
@@ -17,44 +17,49 @@
   <div class="wrap">
     <header>
       <a href="index.html">⟵ Volver</a>
-      <a href="apps/Ajedrez.jar" download>Descargar JAR</a>
+      <a href="/BlancaPorcel.github.io/apps/Ajedrez.jar" download>Descargar JAR</a>
       <button id="run">Iniciar demo</button>
     </header>
     <div id="status">Preparando…</div>
   </div>
 
-  <!-- Runtime global de CheerpJ -->
   <script src="https://cjrtnc.leaningtech.com/latest/loader.js"></script>
   <script>
-    const statusEl = document.getElementById("status");
-    const runBtn = document.getElementById("run");
-    const log = m => { statusEl.textContent = m; console.log("[DEMO]", m); };
+    document.addEventListener("DOMContentLoaded", () => {
+      const statusEl = document.getElementById("status");
+      const runBtn   = document.getElementById("run");
 
-    // URL ABSOLUTA correcta respetando el subpath (BlancaPorcel.github.io)
-    const JAR_URL = new URL("./apps/Ajedrez.jar", window.location.href).href;
+      // Si por lo que sea no existen, no seguimos (evita los null)
+      if (!statusEl || !runBtn) return;
 
-    async function run(){
-      try{
-        log("Inicializando CheerpJ…");
-        await cheerpjInit();
+      const log = m => { statusEl.textContent = m; console.log("[DEMO]", m); };
 
-        log("Comprobando acceso: " + JAR_URL);
-        const head = await fetch(JAR_URL, { method:"HEAD" });
-        if(!head.ok) throw new Error("No se puede acceder a " + JAR_URL + " (HTTP " + head.status + ")");
+      // ⚠️ Ruta ABSOLUTA dentro del dominio para tu Project Page
+      const JAR_PATH = "/BlancaPorcel.github.io/apps/Ajedrez.jar";
 
-        log("Ejecutando el JAR (Main-Class del MANIFEST) …");
-        await cheerpjRunJar(JAR_URL);
+      async function run(){
+        try{
+          log("Inicializando CheerpJ…");
+          await cheerpjInit();
 
-        log("Lanzado. Si es Swing, debería abrirse la ventana.");
-      }catch(e){
-        console.error(e);
-        log("❌ ERROR: " + (e.message || e));
+          log("Comprobando acceso: " + JAR_PATH);
+          const head = await fetch(JAR_PATH, { method:"HEAD" });
+          if (!head.ok) throw new Error("No se puede acceder a " + JAR_PATH + " (HTTP " + head.status + ")");
+
+          log("Ejecutando el JAR (Main-Class del MANIFEST) …");
+          await cheerpjRunJar(JAR_PATH);
+
+          log("Lanzado. Si es Swing, debería abrirse la ventana.");
+        }catch(e){
+          console.error(e);
+          log("❌ ERROR: " + (e.message || e));
+        }
       }
-    }
 
-    // Botón manual + auto al cargar
-    runBtn.addEventListener("click", run);
-    window.addEventListener("load", run);
+      // Auto y botón
+      runBtn.addEventListener("click", run);
+      run(); // ejecuta al cargar
+    });
   </script>
 </body>
 </html>
