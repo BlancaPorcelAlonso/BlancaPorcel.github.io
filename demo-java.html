@@ -1,107 +1,34 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Demo Java — CheerpJ</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: system-ui, Arial;
-        background: #0b0f19;
-        color: #e6e9f0;
-        display: grid;
-        place-items: center;
-        min-height: 100vh;
-      }
-      .wrap {
-        width: min(960px, 100%);
-        background: #141a2a;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 14px;
-        padding: 16px;
-      }
-      header {
-        display: flex;
-        gap: 16px;
-        justify-content: flex-end;
-        margin-bottom: 8px;
-      }
-      a {
-        color: #a5b4fc;
-        text-decoration: none;
-      }
-      button {
-        padding: 8px 12px;
-        border-radius: 10px;
-        background: #1e2638;
-        color: #fff;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        cursor: pointer;
-      }
-      #status {
-        font-size: 14px;
-        color: #9aa3b2;
-        margin-top: 8px;
-        white-space: pre-wrap;
-      }
-    </style>
-  </head>
+<!-- … -->
+<a href="apps/Ajedrez.jar" download>Descargar JAR</a>  <!-- ← ruta relativa -->
 
-  <body>
-    <div class="wrap">
-      <header>
-        <a href="index.html">⟵ Volver</a>
-        <a
-          href="https://blancaporcelalonso.github.io/BlancaPorcel.github.io/apps/Ajedrez.jar"
-          download
-          >Descargar JAR</a
-        >
-        <button id="run">Iniciar demo</button>
-      </header>
-      <div id="status">Preparando…</div>
-    </div>
+<script src="https://cjrtnc.leaningtech.com/latest/loader.js"></script>
+<script>
+  const statusEl = document.getElementById("status");
+  const runBtn = document.getElementById("run");
+  const log = (m) => { statusEl.textContent = m; console.log("[DEMO]", m); };
 
-    <!-- Carga del runtime de CheerpJ -->
-    <script src="https://cjrtnc.leaningtech.com/latest/loader.js"></script>
+  // Ruta relativa dentro del mismo repo / página
+  const JAR_PATH = "apps/Ajedrez.jar";  // ← clave: NO usar https://…
 
-    <!-- 💡 El script va al final del <body>, cuando el DOM ya existe -->
-    <script>
-      // Aquí el DOM YA EXISTE
-      const statusEl = document.getElementById("status");
-      const runBtn = document.getElementById("run");
-      const log = (m) => {
-        if (statusEl) statusEl.textContent = m;
-        console.log("[DEMO]", m);
-      };
+  async function run() {
+    try {
+      log("Inicializando CheerpJ…");
+      await cheerpjInit();
 
-      const JAR_URL =
-        "https://blancaporcelalonso.github.io/BlancaPorcel.github.io/apps/Ajedrez.jar";
+      // (Opcional) comprobar que existe
+      const head = await fetch(JAR_PATH, { method: "HEAD" });
+      if (!head.ok) throw new Error("No se puede acceder al JAR (HTTP " + head.status + ")");
 
-      async function run() {
-        try {
-          log("Inicializando CheerpJ…");
-          await cheerpjInit();
+      log("Ejecutando el JAR…");
+      await cheerpjRunJar(JAR_PATH);    // ← pasar la ruta relativa
 
-          log("Comprobando acceso: " + JAR_URL);
-          const head = await fetch(JAR_URL, { method: "HEAD" });
-          if (!head.ok)
-            throw new Error(
-              "No se puede acceder a " + JAR_URL + " (HTTP " + head.status + ")"
-            );
+      log("Lanzado. Si es Swing, debería abrirse la ventana.");
+    } catch (e) {
+      console.error(e);
+      log("❌ ERROR: " + (e.message || e));
+    }
+  }
 
-          log("Ejecutando el JAR (Main-Class del MANIFEST) …");
-          await cheerpjRunJar(JAR_URL);
-
-          log("Lanzado. Si es Swing, debería abrirse la ventana.");
-        } catch (e) {
-          console.error(e);
-          log("❌ ERROR: " + (e.message || e));
-        }
-      }
-
-      if (runBtn) runBtn.addEventListener("click", run);
-      run(); // ejecuta automáticamente
-    </script>
-  </body>
-</html>
+  runBtn.addEventListener("click", run);
+  run();
+</script>
