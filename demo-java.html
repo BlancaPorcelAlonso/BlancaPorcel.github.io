@@ -3,20 +3,20 @@
   const statusEl = document.getElementById("status");
   const log = m => { statusEl.textContent = m; console.log("[DEMO]", m); };
 
-  // 👇 Path ABSOLUTO dentro del dominio (ojo al nombre del repo y mayúsculas)
-  const JAR_PATH = "/BlancaPorcel.github.io/apps/Ajedrez.jar";
+  // ✅ URL ABSOLUTA CORRECTA (¡sin "/" delante!)
+  const JAR_URL = "https://blancaporcelalonso.github.io/BlancaPorcel/apps/Ajedrez.jar";
 
   async function run(){
     try{
       log("Inicializando CheerpJ…");
       await cheerpjInit();
 
-      log("Comprobando acceso: " + JAR_PATH);
-      const head = await fetch(JAR_PATH, { method: "HEAD" });
-      if (!head.ok) throw new Error("No se puede acceder a " + JAR_PATH + " (HTTP " + head.status + ")");
+      log("Comprobando acceso: " + JAR_URL);
+      const head = await fetch(JAR_URL, { method: "HEAD" });
+      if (!head.ok) throw new Error("No se puede acceder a " + JAR_URL + " (HTTP " + head.status + ")");
 
-      log("Ejecutando el JAR…");
-      await cheerpjRunJar(JAR_PATH);
+      log("Ejecutando el JAR (Main-Class del MANIFEST) …");
+      await cheerpjRunJar(JAR_URL);   // ← pásale la URL completa
 
       log("Lanzado. Si es Swing, debería abrirse la ventana.");
     }catch(e){
