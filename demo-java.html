@@ -11,22 +11,27 @@
     a{color:#a5b4fc;text-decoration:none}
     button{padding:8px 12px;border-radius:10px;background:#1e2638;color:#fff;border:1px solid rgba(255,255,255,.12);cursor:pointer}
     #status{font-size:14px;color:#9aa3b2;margin-top:8px;white-space:pre-wrap}
+    #cj-display{width:800px;height:600px;border:1px solid rgba(255,255,255,.15);border-radius:8px;margin-top:12px}
   </style>
-  <script src="https://cjrtnc.leaningtech.com/latest/loader.js" defer></script>
+  <!-- usa una versión concreta de CheerpJ -->
+  <script src="https://cjrtnc.leaningtech.com/4.2/loader.js" defer></script>
 </head>
 <body>
   <div class="wrap">
     <header>
       <a href="index.html">⟵ Volver</a>
-      <a href="BlancaPorcel.github.io/apps/Ajedrez.jar" download>Descargar JAR</a>
+      <!-- enlace de descarga normal (misma ruta/origen que sirve la página) -->
+      <a href="/apps/Ajedrez.jar" download>Descargar JAR</a>
       <button id="run">Iniciar demo</button>
     </header>
+
     <div id="status">Preparando…</div>
+    <!-- contenedor donde se renderizará Swing/AWT -->
+    <div id="cj-display"></div>
   </div>
 
   <script>
   document.addEventListener("DOMContentLoaded", () => {
-    // Log seguro: no peta si #status no existe
     const log = (m) => {
       const el = document.getElementById("status");
       if (el) el.textContent = m;
@@ -34,23 +39,30 @@
     };
 
     const runBtn = document.getElementById("run");
-    const JAR = "BlancaPorcel.github.io/apps/Ajedrez.jar"; // ajusta si tu HTML no vive bajo esa ruta
+
+    // Ruta correcta para CheerpJ: /app/ + ruta del archivo bajo el root del servidor
+    const JAR_PATH = "/app/apps/Ajedrez.jar";
 
     async function run() {
       try {
         log("Inicializando CheerpJ…");
+
         if (typeof cheerpjInit !== "function") throw new Error("cheerpjInit no está disponible.");
+
+        // inicializa runtime (versión fija del loader)
         await cheerpjInit();
 
-        log("Comprobando acceso al JAR…");
-        // Comprobación opcional: usa ruta web normal para el HEAD
-        const head = await fetch("apps/Ajedrez.jar", { method: "HEAD" });
+        // crea el display donde aparecerán las ventanas Swing
+        const mount = document.getElementById("cj-display");
+        if (mount) await cheerpjCreateDisplay(mount);
+
+        // comprobación opcional de que el JAR es accesible (misma ruta, mismo origen)
+        const head = await fetch("/apps/Ajedrez.jar", { method: "HEAD" });
         if (!head.ok) throw new Error("No se puede acceder al JAR (HTTP " + head.status + ")");
 
         log("Ejecutando el JAR…");
-        await cheerpjRunJar(JAR); // siempre con prefijo /app/
-
-        log("Lanzado. Si es Swing, debería abrirse la ventana.");
+        const exitCode = await cheerpjRunJar(JAR_PATH);
+        log("Proceso finalizado con código " + exitCode);
       } catch (e) {
         console.error(e);
         log("❌ ERROR: " + (e?.message || e));
