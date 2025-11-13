@@ -34,7 +34,7 @@
     };
 
     const runBtn = document.getElementById("run");
-    const JAR = "/apps/Ajedrez.jar"; // ajusta si tu HTML no vive bajo esa ruta
+    const JAR = "apps/Ajedrez.jar"; // ajusta si tu HTML no vive bajo esa ruta
 
     async function run() {
       try {
@@ -44,7 +44,7 @@
 
         log("Comprobando acceso al JAR…");
         // Comprobación opcional: usa ruta web normal para el HEAD
-        const head = await fetch("BlancaPorcel.github.io/apps/Ajedrez.jar", { method: "HEAD" });
+        const head = await fetch("apps/Ajedrez.jar", { method: "HEAD" });
         if (!head.ok) throw new Error("No se puede acceder al JAR (HTTP " + head.status + ")");
 
         log("Ejecutando el JAR…");
