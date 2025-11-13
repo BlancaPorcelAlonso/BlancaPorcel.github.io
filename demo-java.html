@@ -1,76 +1,21 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Demo Java — CheerpJ</title>
-  <style>
-    body{margin:0;font-family:system-ui,Arial;background:#0b0f19;color:#e6e9f0;display:grid;place-items:center;min-height:100vh}
-    .wrap{width:min(960px,100%);background:#141a2a;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px}
-    header{display:flex;gap:16px;justify-content:flex-end;margin-bottom:8px}
-    a{color:#a5b4fc;text-decoration:none}
-    button{padding:8px 12px;border-radius:10px;background:#1e2638;color:#fff;border:1px solid rgba(255,255,255,.12);cursor:pointer}
-    #status{font-size:14px;color:#9aa3b2;margin-top:8px;white-space:pre-wrap}
-  </style>
-  <!-- Carga el loader con defer para que no bloquee el DOM -->
-  <script src="https://cjrtnc.leaningtech.com/latest/loader.js" defer></script>
-</head>
-<body>
-  <div class="wrap">
-    <header>
-      <a href="index.html">⟵ Volver</a>
-      <!-- Ajusta la ruta del JAR a tu estructura real -->
-      <!-- Si tu página vive en /BlancaPorcel.github.io/, usa la absoluta del sitio: -->
-      <!-- <a href="/BlancaPorcel.github.io/apps/Ajedrez.jar" download>Descargar JAR</a> -->
-      <a href="/BlancaPorcel.github.io/apps/Ajedrez.jar" download>Descargar JAR</a>
-      <button id="run">Iniciar demo</button>
-    </header>
-    <div id="status">Preparando…</div>
-  </div>
+<script src="https://cjrtnc.leaningtech.com/latest/loader.js" defer></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const log = (m) => { console.log("[DEMO]", m); document.getElementById("status").textContent = m; };
 
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const statusEl = document.getElementById("status");
-    const runBtn   = document.getElementById("run");
+  try {
+    log("Inicializando CheerpJ…");
+    await cheerpjInit();
 
-    const log = (m) => {
-      if (statusEl) statusEl.textContent = m;
-      console.log("[DEMO]", m);
-    };
+    const JAR = "/app/BlancaPorcel.github.io/apps/Ajedrez.jar"; // 👈 clave
 
-    // ⚠️ Ruta del mismo origen. No poner https://
-    // Si tu HTML está bajo /BlancaPorcel.github.io/, usa "/BlancaPorcel.github.io/apps/Ajedrez.jar"
-    const JAR_PATH = "/BlancaPorcel.github.io/apps/Ajedrez.jar";
+    log("Ejecutando el JAR…");
+    await cheerpjRunJar(JAR);
 
-    async function run() {
-      try {
-        log("Inicializando CheerpJ…");
-        if (typeof cheerpjInit !== "function") {
-          throw new Error("cheerpjInit no está disponible (¿cargó loader.js?).");
-        }
-        await cheerpjInit();
-
-        log("Comprobando acceso: " + JAR_PATH);
-        const head = await fetch(JAR_PATH, { method: "HEAD" });
-        if (!head.ok) throw new Error("No se puede acceder al JAR (HTTP " + head.status + ")");
-
-        log("Ejecutando el JAR…");
-        await cheerpjRunJar(JAR_PATH);
-
-        log("Lanzado. Si es Swing, debería abrirse la ventana.");
-      } catch (e) {
-        console.error(e);
-        log("❌ ERROR: " + (e && e.message ? e.message : e));
-      }
-    }
-
-    // ✅ Evita el error si faltara el botón
-    if (runBtn) runBtn.addEventListener("click", run);
-    else console.warn('No se encontró #run en el DOM');
-
-    // Auto-ejecuta la demo
-    run();
-  });
-  </script>
-</body>
-</html>
+    log("Lanzado. Si es Swing, debería verse la ventana.");
+  } catch (e) {
+    console.error(e);
+    log("❌ ERROR: " + (e.message || e));
+  }
+});
+</script>
