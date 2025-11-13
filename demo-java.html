@@ -3,22 +3,22 @@
   const statusEl = document.getElementById("status");
   const log = m => { statusEl.textContent = m; console.log("[DEMO]", m); };
 
-  // URL ABSOLUTA al JAR (resuelve contra la página actual)
-  const JAR_URL = new URL("apps/Ajedrez.jar", window.location.href).href;
+  // Construye la URL absoluta respetando el subpath del repo
+  const JAR_URL = new URL("./apps/Ajedrez.jar", window.location.href).href;
 
   async function run() {
     try {
       log("Inicializando CheerpJ…");
       await cheerpjInit();
 
-      log("Comprobando acceso al JAR: " + JAR_URL);
+      log("Comprobando acceso: " + JAR_URL);
       const head = await fetch(JAR_URL, { method: "HEAD" });
       if (!head.ok) throw new Error("No se puede acceder a " + JAR_URL + " (HTTP " + head.status + ")");
 
       log("Ejecutando el JAR…");
-      await cheerpjRunJar(JAR_URL);   // ← usar URL absoluta evita que lo pida como /apps/...
+      await cheerpjRunJar(JAR_URL);
 
-      log("Lanzado. Si es Swing, debería abrirse la ventana.");
+      log("Lanzado. Si es Swing, debería aparecer la ventana.");
     } catch (e) {
       console.error(e);
       log("❌ ERROR: " + (e.message || e));
