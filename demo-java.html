@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Demo Java — CheerpJ (módulos)</title>
+  <title>Demo Java — CheerpJ (global)</title>
   <style>
     :root{--bg:#0b0f19;--card:#141a2a;--text:#e6e9f0;--muted:#9aa3b2}
     html,body{height:100%;margin:0}
@@ -25,44 +25,34 @@
     <div id="status">Preparando entorno…</div>
   </div>
 
-  <!-- USO EXCLUSIVO DE MÓDULOS ES -->
-  <script type="module">
+  <!-- Runtime global de CheerpJ -->
+  <script src="https://cjrtnc.leaningtech.com/latest/loader.js"></script>
+  <script>
     const statusEl = document.getElementById("status");
     const JAR = "apps/Ajedrez.jar";
     const log = m => { statusEl.textContent = m; console.log("[DEMO]", m); };
 
     async function run() {
       try {
-        log("Importando módulo de CheerpJ…");
-        const {
-          cheerpjInit,
-          cheerpjAddClasspath,
-          cheerpjRunMain,
-          // cheerpjRunJar  // (no lo usamos aquí)
-        } = await import("https://cjrtnc.leaningtech.com/3.0/cheerpj.mjs");
-
-        log("Inicializando runtime…");
-        await cheerpjInit(); // puedes pasar {canvas:null} si quieres
+        log("Inicializando CheerpJ…");
+        await cheerpjInit(); // <- API global
 
         log("Comprobando acceso al JAR…");
         const head = await fetch(JAR, { method: "HEAD" });
         if (!head.ok) throw new Error("No se puede acceder a " + JAR + " (HTTP " + head.status + ")");
 
-        log("Añadiendo classpath…");
-        await cheerpjAddClasspath(JAR);
+        log("Ejecutando el JAR (usando Main-Class del MANIFEST)...");
+        await cheerpjRunJar(JAR); // <- API global (no usa AddClasspath)
 
-        log("Ejecutando ajedrez.Ajedrez.main()…");
-        await cheerpjRunMain("ajedrez.Ajedrez", []);
-
-        log("Main ejecutado. Si es Swing, debería abrirse la ventana.");
+        log("Lanzado. Si es Swing, debería abrirse la ventana.");
       } catch (e) {
         console.error(e);
-        statusEl.textContent = "❌ ERROR: " + (e && e.message ? e.message : e);
+        log("❌ ERROR: " + (e.message || e));
       }
     }
 
-    document.getElementById("retry").addEventListener("click", run);
     window.addEventListener("load", run);
+    document.getElementById("retry").addEventListener("click", run);
   </script>
 </body>
 </html>
