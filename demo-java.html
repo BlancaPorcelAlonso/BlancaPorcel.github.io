@@ -3,8 +3,8 @@
   const statusEl = document.getElementById("status");
   const log = m => { statusEl.textContent = m; console.log("[DEMO]", m); };
 
-  // 👇 Path ABSOLUTO dentro del dominio (ojo al nombre del repo y mayúsculas)
-  const JAR_PATH = "/BlancaPorcel.github.io/apps/Ajedrez.jar";
+  // Ruta correcta al JAR (sin duplicar dominio)
+  const JAR_PATH = "BlancaPorcel.github.io/apps/Ajedrez.jar";
 
   async function run(){
     try{
@@ -15,7 +15,7 @@
       const head = await fetch(JAR_PATH, { method: "HEAD" });
       if (!head.ok) throw new Error("No se puede acceder a " + JAR_PATH + " (HTTP " + head.status + ")");
 
-      log("Ejecutando el JAR…");
+      log("Ejecutando el JAR (Main-Class del MANIFEST)...");
       await cheerpjRunJar(JAR_PATH);
 
       log("Lanzado. Si es Swing, debería abrirse la ventana.");
