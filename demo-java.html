@@ -7,70 +7,43 @@
   <style>
     body{margin:0;font-family:system-ui,Arial;background:#0b0f19;color:#e6e9f0;display:grid;place-items:center;min-height:100vh}
     .wrap{width:min(960px,100%);background:#141a2a;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px}
-    header{display:flex;gap:16px;justify-content:flex-end;margin-bottom:8px}
-    a{color:#a5b4fc;text-decoration:none}
-    button{padding:8px 12px;border-radius:10px;background:#1e2638;color:#fff;border:1px solid rgba(255,255,255,.12);cursor:pointer}
     #status{font-size:14px;color:#9aa3b2;margin-top:8px;white-space:pre-wrap}
-    #cj-display{width:800px;height:600px;border:1px solid rgba(255,255,255,.15);border-radius:8px;margin-top:12px}
+    #cj-display{width:820px;height:620px;border:1px solid rgba(255,255,255,.15);border-radius:8px;margin-top:12px}
   </style>
-  <!-- usa una versión concreta de CheerpJ -->
   <script src="https://cjrtnc.leaningtech.com/4.2/loader.js" defer></script>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <a href="index.html">⟵ Volver</a>
-      <!-- enlace de descarga normal (misma ruta/origen que sirve la página) -->
-      <a href="/apps/Ajedrez.jar" download>Descargar JAR</a>
-      <button id="run">Iniciar demo</button>
-    </header>
-
+    <button id="run">Iniciar demo</button>
     <div id="status">Preparando…</div>
-    <!-- contenedor donde se renderizará Swing/AWT -->
     <div id="cj-display"></div>
   </div>
 
   <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const log = (m) => {
-      const el = document.getElementById("status");
-      if (el) el.textContent = m;
-      console.log("[DEMO]", m);
-    };
-
+    const log = (m) => (document.getElementById("status").textContent = m);
     const runBtn = document.getElementById("run");
-
-    // Ruta correcta para CheerpJ: /app/ + ruta del archivo bajo el root del servidor
-    const JAR_PATH = "/app/apps/Ajedrez.jar";
 
     async function run() {
       try {
         log("Inicializando CheerpJ…");
-
-        if (typeof cheerpjInit !== "function") throw new Error("cheerpjInit no está disponible.");
-
-        // inicializa runtime (versión fija del loader)
         await cheerpjInit();
+        await cheerpjCreateDisplay(document.getElementById("cj-display"));
 
-        // crea el display donde aparecerán las ventanas Swing
-        const mount = document.getElementById("cj-display");
-        if (mount) await cheerpjCreateDisplay(mount);
-
-        // comprobación opcional de que el JAR es accesible (misma ruta, mismo origen)
+        // Comprueba acceso al JAR desde el MISMO origen
         const head = await fetch("/apps/Ajedrez.jar", { method: "HEAD" });
-        if (!head.ok) throw new Error("No se puede acceder al JAR (HTTP " + head.status + ")");
+        if (!head.ok) throw new Error("No se puede acceder a /apps/Ajedrez.jar (HTTP " + head.status + ")");
 
-        log("Ejecutando el JAR…");
-        const exitCode = await cheerpjRunJar(JAR_PATH);
-        log("Proceso finalizado con código " + exitCode);
+        log("Ejecutando JAR…");
+        const code = await cheerpjRunJar("/app/apps/Ajedrez.jar");
+        log("Finalizado con código " + code);
       } catch (e) {
         console.error(e);
         log("❌ ERROR: " + (e?.message || e));
       }
     }
 
-    if (runBtn) runBtn.addEventListener("click", run);
-    run(); // auto
+    runBtn.addEventListener("click", run);
   });
   </script>
 </body>
